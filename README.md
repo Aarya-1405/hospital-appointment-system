@@ -106,3 +106,18 @@ hospital-appointment-system/
 
 ## 8. Testing status
 The code was syntax-checked, but it has **not been run end to end** against a live MongoDB. Follow the checklist in `docs/GUIDE.md` (section F) after setup to confirm each feature on your machine.
+
+## 9. Run with Docker
+
+1. Create a `.env` file in the project root (never commit it):
+cho “JWT_SECRET=$(openssl rand -hex 32)” > .env
+
+2. Build and start everything:
+
+docker compose up -d --build
+
+3. Load sample data (first time only, safe to re-run):
+
+docker compose exec server npm run seed
+4. Open http://localhost:5173 (frontend) and http://localhost:5000/api/doctors (API).
+5. Stop: `docker compose down` (add `-v` to also wipe the database).
