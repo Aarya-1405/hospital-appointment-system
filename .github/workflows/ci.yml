@@ -2,7 +2,7 @@ name: Hospital Appointment System CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, devops-setup ]
   pull_request:
     branches: [ main ]
 
@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: server/package-lock.json
 
       - name: Install backend dependencies
-        run: npm ci
+        run: npm install
 
   frontend-check:
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
           cache-dependency-path: client/package-lock.json
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build frontend
         run: npm run build
