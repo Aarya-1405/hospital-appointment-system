@@ -17,13 +17,14 @@ services:
     image: hospital-server:latest
     container_name: hospital-server
     restart: unless-stopped
+    ports:
+      - "5000:5000"
     environment:
       PORT: 5000
       MONGO_URI: mongodb://mongo:27017/hospital_appointments
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in the .env file next to docker-compose.yml}
       JWT_EXPIRES: 1d
-    ports:
-      - "5000:5000"
+
     depends_on:
       mongo:
         condition: service_healthy
@@ -47,4 +48,4 @@ volumes:
 
 networks:
   hospital-net:
-    name: hospital-net
+    name: hospital-ne

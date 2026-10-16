@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const { metricsMiddleware, metricsHandler } = require('./middleware/metrics');
 
 if (!process.env.JWT_SECRET) {
   console.error('JWT_SECRET is missing. Add it to server/.env (see .env.example).');
@@ -13,7 +14,12 @@ const app = express();
 app.use(cors());          // lets the React app (port 5173) call this API (port 5000)
 app.use(express.json());  // lets us read JSON sent in request bodies
 
+// ── Prometheus metrics ───────────────────────────────────────────────────────
+app.use(metricsMiddleware);          // record http_requests_total & latency histogram
+app.get('/metrics', metricsHandler); // Prometheus scrape endpoint
+
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/doctors', require('./routes/doctorRoutes'));
 app.use('/api/appointments', require('./routes/appointmentRoutes'));
