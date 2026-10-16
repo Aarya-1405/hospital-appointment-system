@@ -48,4 +48,4 @@ volumes:
 
 networks:
   hospital-net:
-    name: hospital-ne
+    name: hospital-net
