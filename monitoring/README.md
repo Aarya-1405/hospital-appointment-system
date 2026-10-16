@@ -19,7 +19,7 @@ Prometheus (hospital-prometheus:9090)
 Grafana   (hospital-grafana:3000)
         │  visualises dashboards provisioned from this repository
         ▼
-Browser (http://localhost:3000)
+Browser (http://localhost:3002, container port 3000)
 ```
 
 All four containers share the Docker bridge network **hospital-net**.
@@ -121,7 +121,7 @@ docker compose down -v       # also wipes the database
 | Express API health | http://localhost:5000/api/health | JSON `{"ok":true}` |
 | Prometheus metrics | http://localhost:5000/metrics | Raw Prometheus text |
 | Prometheus UI | http://localhost:9090 | Query, targets, alerts |
-| Grafana | http://localhost:3000 | Dashboards |
+| Grafana | http://localhost:3002 | Dashboards |
 
 ---
 
@@ -256,3 +256,19 @@ The dashboard appears under **Dashboards → Hospital → Hospital API Overview*
 | … (all other prom-client defaults) | various | — | GC stats, file descriptors, version info |
 
 The `route` label uses the Express matched route pattern (e.g. `/api/appointments/:id/cancel`) rather than raw request paths, so label cardinality stays bounded regardless of the number of appointments or users.
+
+---
+
+## Grafana host port (3002)
+
+Grafana runs on **container port 3000**, but the compose file publishes it on
+**host port 3002** (`"3002:3000"` in `monitoring/docker-compose.yml`). Port 3000
+is commonly taken on developer machines by another Grafana, so 3002 avoids the
+"address already in use" error.
+
+- Browser: http://localhost:3002 (login `admin` / `admin`)
+- Prometheus still reaches Grafana's datasource at
+  `http://hospital-prometheus:9090` inside the Docker network, so the host port
+  change does not affect it.
+
+To use a different port, change the left side of `"3002:3000"`.
